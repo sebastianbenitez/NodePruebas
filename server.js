@@ -6,10 +6,10 @@ function iniciar(route, handle) {
 		var pathname = url.parse(request.url).pathname;
 		console.log(`Request a ${pathname} recibido.`);
 
-		route(pathname, handle);
-
 		response.writeHead(200, {'Content-Type': 'text/html'});
-		response.write('holis');
+		var content = route(pathname, handle);
+		response.write(content);
+
 		response.end();
 	}
 	

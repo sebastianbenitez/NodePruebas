@@ -3,14 +3,26 @@ var url = require('url');
 
 function iniciar(route, handle) {
 	function onRequest(request, response) {
+		var postData = '';
 		var pathname = url.parse(request.url).pathname;
 		console.log(`Request a ${pathname} recibido.`);
 
-		response.writeHead(200, {'Content-Type': 'text/html'});
+		request.setEncoding('utf8');
+
+		request.addListener('data', function (datos) {
+			postData += datos;
+			console.log('POST recibido: ' + datos)
+		});
+
+		request.addListener('end', function () {
+			route(pathname, handle, response, postData);
+		});
+
+		/*response.writeHead(200, {'Content-Type': 'text/html'});
 		var content = route(pathname, handle);
 		response.write(content);
 
-		response.end();
+		response.end();*/
 	}
 	
 	http.createServer(onRequest).listen(8080);
